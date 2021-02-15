@@ -25,10 +25,19 @@ int main(int n, char* args[])
 	curl = curl_easy_init();
 	if (curl) {
 		fp = fopen(outfilename, "wb");
-		curl_easy_setopt(curl, CURLOPT_URL, "http://www.google.co.uk/");
+		
+		curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
+		curl_easy_setopt(curl, CURLOPT_URL, "https://deezerdevs-deezer.p.rapidapi.com/search?q=eminem");
+
+		struct curl_slist* headers = NULL;
+		headers = curl_slist_append(headers, "x-rapidapi-key: ffe3711fc7mshb5178c5639ffd04p1bd34ajsn8b932956cd90");
+		headers = curl_slist_append(headers, "x-rapidapi-host: deezerdevs-deezer.p.rapidapi.com");
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+
 		res = curl_easy_perform(curl);
+		
 		curl_easy_cleanup(curl);
 		fclose(fp);
 	}

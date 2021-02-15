@@ -2,10 +2,15 @@
 //
 
 #include <iostream>
+#define CURL_STATICLIB
+#include <curl\curl.h>
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    CURL* curl;
+
+    curl = curl_easy_init();
+    curl_easy_cleanup(curl);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

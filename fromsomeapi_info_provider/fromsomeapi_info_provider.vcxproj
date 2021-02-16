@@ -141,7 +141,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cli_view.cpp" />
+    <ClCompile Include="controller.cpp" />
+    <ClCompile Include="curl_sender.cpp" />
     <ClCompile Include="fromsomeapi_info_provider.cpp" />
+    <ClCompile Include="model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cli_view.h" />

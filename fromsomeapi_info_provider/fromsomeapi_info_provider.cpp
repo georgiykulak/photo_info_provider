@@ -89,11 +89,26 @@ Model getModel()
 	}
 
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
-	curl_easy_setopt(curl, CURLOPT_URL, "https://currency-converter5.p.rapidapi.com/currency/convert?format=json&from=USD&to=UAH&amount=1200&language=en");
+
+	// "https://currency-converter5.p.rapidapi.com/currency/convert?format=json&from=USD&to=UAH&amount=1200&language=en"
+	// Read following data from input config
+	std::string const apiLink = "https://currency-converter5.p.rapidapi.com/currency/";
+	std::string const option = "convert";
+	std::string const format = "json";
+	std::string const language = "en";
+	std::string const otherStuff = "from=USD&to=UAH&amount=1200";
+	std::string const link =
+		apiLink + option + "?" + // required
+		"format=" + format + "&" +
+		otherStuff + "&" +
+		"language=" + language;
+	curl_easy_setopt(curl, CURLOPT_URL, link.data() );
 
 	struct curl_slist* headers = nullptr;
-	headers = curl_slist_append(headers, "x-rapidapi-key: ffe3711fc7mshb5178c5639ffd04p1bd34ajsn8b932956cd90");
-	headers = curl_slist_append(headers, "x-rapidapi-host: currency-converter5.p.rapidapi.com");
+	std::string const key = "x-rapidapi-key: ffe3711fc7mshb5178c5639ffd04p1bd34ajsn8b932956cd90";
+	std::string const host = "x-rapidapi-host: currency-converter5.p.rapidapi.com";
+	headers = curl_slist_append(headers, key.data() );
+	headers = curl_slist_append(headers, host.data() );
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteDataCallback);
 	std::string response;

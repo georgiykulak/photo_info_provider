@@ -143,6 +143,13 @@
   <ItemGroup>
     <ClCompile Include="fromsomeapi_info_provider.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cli_view.h" />
+    <ClInclude Include="controller.h" />
+    <ClInclude Include="curl_sender.h" />
+    <ClInclude Include="iview.h" />
+    <ClInclude Include="model.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

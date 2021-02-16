@@ -141,18 +141,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cli_view.cpp" />
-    <ClCompile Include="controller.cpp" />
-    <ClCompile Include="curl_sender.cpp" />
     <ClCompile Include="fromsomeapi_info_provider.cpp" />
-    <ClCompile Include="model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cli_view.h" />
-    <ClInclude Include="controller.h" />
-    <ClInclude Include="curl_sender.h" />
+    <ClInclude Include="cli_view.hpp" />
+    <ClInclude Include="controller.hpp" />
+    <ClInclude Include="curl_sender.hpp" />
+    <ClInclude Include="fromsomeapi_info_provider.hpp" />
     <ClInclude Include="iview.h" />
-    <ClInclude Include="model.h" />
+    <ClInclude Include="model.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

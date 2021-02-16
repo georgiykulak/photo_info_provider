@@ -9,9 +9,15 @@ class Controller
 public:
 	Controller() = delete;
 
-	Controller(Model const& model, std::unique_ptr< IView > const& viewPtr);
+	Controller(Model const& model, std::unique_ptr< IView > const& viewPtr)
+		: m_model{ model }
+		, m_view{ viewPtr }
+	{}
 
-	void getResult() const noexcept;
+	void getResult() const noexcept
+	{
+		m_view->get(m_model);
+	}
 
 private:
 	Model const& m_model;

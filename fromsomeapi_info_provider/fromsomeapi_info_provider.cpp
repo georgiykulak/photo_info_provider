@@ -4,6 +4,8 @@
 class Model
 {
 public:
+	Model() = default;
+
 	Model(std::string const& str)
 	{
 		set(str);
@@ -11,24 +13,22 @@ public:
 
 	virtual void set(std::string const& str)
 	{
-		// TODO: Parse JSON
 		m_data = str;
 	}
 
-	virtual std::string get() const
+	virtual std::string const & get() const noexcept
 	{
 		return m_data;
 	}
 
 private:
-	// TODO: Should be JSON
-	std::string  m_data;
+	std::string m_data;
 };
 
 class IView
 {
 public:
-	//virtual void get(std::string const&) const noexcept = 0;
+	virtual void set(std::string &, std::string&) const = 0;
 	
 	virtual void get(Model const &) const noexcept = 0;
 };
@@ -36,12 +36,15 @@ public:
 class CLIView final : public IView
 {
 public:
-	//void get( std::string const & str ) const noexcept override
-	//{
-	//	std::cout << str << std::endl;
-	//}
+	void set(std::string& username, std::string& password) const override
+	{
+		std::cout << "Enter username: ";
+		std::cin >> username;
+
+		std::cout << "Enter password: ";
+		std::cin >> password;
+	}
 	
-	// TODO: Upgrade soon
 	void get(Model const& model) const noexcept override
 	{
 		std::cout << model.get() << std::endl;
@@ -53,9 +56,9 @@ class Controller
 public:
 	Controller() = delete;
 
-	Controller( Model const & model, std::unique_ptr< IView > viewPtr )
+	Controller( Model const & model, std::unique_ptr< IView > const & viewPtr )
 		: m_model{ model }
-		, m_view{ std::move(viewPtr) }
+		, m_view{ viewPtr }
 	{}
 
 	void getResult() const
@@ -65,7 +68,7 @@ public:
 
 private:
 	Model const & m_model;
-	std::unique_ptr< IView > m_view;
+	std::unique_ptr< IView > const & m_view;
 };
 
 std::size_t WriteDataCallback(char* in, std::size_t size, std::size_t nmemb, std::string* out)
@@ -79,57 +82,60 @@ std::size_t WriteDataCallback(char* in, std::size_t size, std::size_t nmemb, std
 	return writeSize;
 }
 
-Model getModel()
+void send(Model& model, std::string const& link, std::string const& auth)
 {
 	CURL* curl = curl_easy_init();
 
 	if (!curl)
-	{
-		return Model("Error: Something wrong happened on curl_easy_init()");
-	}
+		return;
 
 	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
-
-	// "https://currency-converter5.p.rapidapi.com/currency/convert?format=json&from=USD&to=UAH&amount=1200&language=en"
-	// Read following data from input config
-	std::string const apiLink = "https://currency-converter5.p.rapidapi.com/currency/";
-	std::string const option = "convert";
-	std::string const format = "json";
-	std::string const language = "en";
-	std::string const otherStuff = "from=USD&to=UAH&amount=1200";
-	std::string const link =
-		apiLink + option + "?" + // required
-		"format=" + format + "&" +
-		otherStuff + "&" +
-		"language=" + language;
-	curl_easy_setopt(curl, CURLOPT_URL, link.data() );
+	curl_easy_setopt(curl, CURLOPT_URL, link.data());
 
 	struct curl_slist* headers = nullptr;
-	std::string const key = "x-rapidapi-key: ffe3711fc7mshb5178c5639ffd04p1bd34ajsn8b932956cd90";
-	std::string const host = "x-rapidapi-host: currency-converter5.p.rapidapi.com";
-	headers = curl_slist_append(headers, key.data() );
-	headers = curl_slist_append(headers, host.data() );
+
+	headers = curl_slist_append(headers, auth.data());
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteDataCallback);
+
 	std::string response;
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
 	curl_easy_perform(curl);
-
 	curl_easy_cleanup(curl);
 
-	return Model(response);
+	model.set(response);
+}
+
+Model getModel(std::unique_ptr< IView > const& viewPtr, std::string const & apiLink)
+{
+	Model model;
+	std::string user;
+	std::string access_key;
+
+	viewPtr->set( user, access_key );
+
+	std::string const link = apiLink + "users/" + user + "/photos/";
+	std::string const auth = "Authorization: Client-ID " + access_key;
+	send(model, link, auth );
+
+	if ( model.get().empty() )
+		return Model("Error: Something wrong happened on curl_easy_init()");
+
+	return model;
 }
 
 int main( int argc, char* argv[] )
 {
-	Model model = getModel();
+	std::string const apiLink = "https://api.unsplash.com/";
 
 	std::unique_ptr< IView > viewPtr( std::make_unique< CLIView >() );
 
-	Controller controller( model, std::move( viewPtr ) );
+	Model model = getModel(viewPtr, apiLink);
 
-	controller.getResult(); // get what depends on config
+	Controller controller( model, viewPtr );
+
+	controller.getResult();
 
 	return 0;
 }

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6913d934-085f-42fa-a147-b93a0f5f0e2d}</ProjectGuid>
+    <ProjectGuid>{c03ba87e-2166-4f6e-bc42-891ffff665f2}</ProjectGuid>
     <RootNamespace>apiunittest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

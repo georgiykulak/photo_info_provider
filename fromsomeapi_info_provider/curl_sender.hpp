@@ -59,7 +59,7 @@ Model getModel(std::string user, std::string access_key, std::string const& apiL
 	send(model, link, auth);
 
 	if (model.get().empty())
-		return Model("{\"error\":\"Something wrong happened on curl_easy_init()\"}");
+		return Model( R"({"error":"Something wrong happened on curl_easy_init"})" );
 
 	return model;
 }

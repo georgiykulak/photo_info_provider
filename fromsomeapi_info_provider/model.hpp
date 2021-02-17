@@ -25,5 +25,5 @@ public:
 	}
 
 private:
-	json m_rawJSON;
+	json m_rawJSON = json::array();
 };

@@ -1,6 +1,9 @@
 #define BOOST_TEST_MODULE mytests
 
-#include "../fromsomeapi_info_provider/fromsomeapi_info_provider.hpp"
+#include "../fromsomeapi_info_provider/controller.hpp"
+#include "../fromsomeapi_info_provider/iview.h"
+#include "../fromsomeapi_info_provider/curl_sender.hpp"
+#include "../fromsomeapi_info_provider/json_parser.hpp"
 
 #include <boost/test/included/unit_test.hpp>
 
@@ -12,100 +15,77 @@ std::string const apiLink = "https://api.unsplash.com/";
 
 std::string testUsername = "testUsername";
 std::string testPassword = "testPassword";
-std::string output;
-
-std::string& getOutputString() { return output; }
+json outputJSON;
 
 class TestView final : public IView
 {
 public:
-
-	void set(std::string& username, std::string& password) const override
+	void setAssetNumber(std::size_t const index) noexcept override
 	{
-		username = testUsername;
-
-		password = testPassword;
+		m_index = index;
 	}
 
 	void get(Model const& model) const noexcept override
 	{
-		 getOutputString() = model.getRaw();
+		outputJSON = parseJSON(model.get(), m_index);
 	}
+private:
+	std::size_t m_index = 0;
 };
 
 BOOST_AUTO_TEST_CASE(ModelViewTest)
 {
+	outputJSON = json{};
+	
 	std::unique_ptr< IView > viewPtr(std::make_unique< TestView >());
 	
-	Model model( "[{\"id\":\"some_id\"}]" );
+	Model model( R"([{"id":"some_id1"}])" );
 	
-	std::string username;
-	std::string password;
-
-	viewPtr->set(username, password);
-
-	BOOST_REQUIRE_EQUAL(username, "testUsername");
-	BOOST_REQUIRE_EQUAL(password, "testPassword");
-
 	viewPtr->get(model);
 
-	BOOST_CHECK_EQUAL(output, "[{\"id\":\"some_id\"}]");
+	BOOST_CHECK_EQUAL(outputJSON["filename"], "some_id1");
 }
 
 BOOST_AUTO_TEST_CASE(MVCTest)
 {
+	outputJSON = json{};
+
 	std::unique_ptr< IView > viewPtr(std::make_unique< TestView >());
 
-	Model model;
-
-	// Almost 'model = getModel();'
-	{
-		std::string username;
-		std::string password;
-		viewPtr->set(username, password);
-
-		BOOST_REQUIRE_EQUAL(username, "testUsername");
-		BOOST_REQUIRE_EQUAL(password, "testPassword");
-
-		std::string const link = apiLink + "users/" + username + "/photos";
-		std::string const auth = "?client_id=" + password;
-
-		model.set(link + auth);
-	}
+	Model model(R"([{"id":"some_id2"}])");
 
 	Controller controller(model, viewPtr);
 
 	controller.getResult();
 
-	BOOST_CHECK_EQUAL(
-		output,
-		"https://api.unsplash.com/users/testUsername/photos?client_id=testPassword"
-	);
+	BOOST_CHECK_EQUAL(outputJSON["filename"], "some_id2");
 }
 
 BOOST_AUTO_TEST_CASE(MainTest)
 {
-	// Almost defMain();
-
 #ifdef _TINPUT
-	std::cout << "Test: Enter username ";
+	// Almost defMain();
+	
+	std::cout << "Test: Enter username: ";
 	std::cin >> testUsername;
-	std::cout << "Test: Enter password ";
+	std::cout << "Test: Enter password: ";
 	std::cin >> testPassword;
+	std::size_t const index = 0;
 
 	std::unique_ptr< IView > viewPtr(std::make_unique< TestView >());
 
-	Model model = getModel(viewPtr, apiLink);
+	Model model = getModel(testUsername, testPassword, apiLink);
 
 	Controller controller(model, viewPtr);
 
+	controller.setAssetNumber(index);
+
 	controller.getResult();
 
-	std::string newOutput = output.substr(2, 146);
-	BOOST_CHECK_EQUAL(
-		newOutput,
-		"\"id\":\"ZLkHfhf1YrE\",\"created_at\":\"2021-02-16T11:13:48-05:00\",\"updated_at\":\"2021-02-16T11:13:49-05:00\",\"promoted_at\":null,\"width\":2784,\"height\":4176"
-	);
+	BOOST_CHECK_EQUAL(outputJSON["filename"], "EwgqRnJT9gE");
+	BOOST_CHECK_EQUAL(outputJSON["filesize"], 11376774);
+	BOOST_CHECK_EQUAL(outputJSON["modifiedTime"], "2021-02-17T16:11:19-05:00");
+	BOOST_CHECK_EQUAL(outputJSON["uploadTime"], "2021-02-17T16:11:18-05:00");
 #else
 	std::cout <<
 		"The test \"MainTest\" requires user input. If you able to enter from keyboard - define _TINPUT"

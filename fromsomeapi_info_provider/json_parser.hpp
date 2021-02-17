@@ -23,6 +23,10 @@ json parseJSON(json const& rawJSON, std::size_t index)
 	{
 		return json({ "error", "The index " + std::to_string(index) + " is out of range" });
 	}
+	catch (std::exception const&)
+	{
+		return json({ "error", "Can't access array of assets by an index" });
+	}
 
 	if (rawAsset.contains("id"))
 		cleanJSON["filename"] = rawAsset["id"];

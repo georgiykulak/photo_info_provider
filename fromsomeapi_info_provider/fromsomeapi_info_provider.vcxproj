@@ -149,6 +149,7 @@
     <ClInclude Include="curl_sender.hpp" />
     <ClInclude Include="fromsomeapi_info_provider.hpp" />
     <ClInclude Include="iview.h" />
+    <ClInclude Include="json_parser.hpp" />
     <ClInclude Include="model.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

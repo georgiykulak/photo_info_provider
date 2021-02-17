@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "json_parser.hpp"
 
 class Model
 {
@@ -31,8 +31,7 @@ public:
 
 	virtual void reparse()
 	{
-		// TODO: Reparse JSON
-		m_cleanData = m_rawData; // TODO: Remove it !!!
+		m_cleanData = parseJSON( m_rawData, 0 );
 	}
 
 private:

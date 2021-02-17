@@ -9,8 +9,15 @@
 class CLIView final : public IView
 {
 public:
+	void setAssetNumber(std::size_t const index) noexcept override
+	{
+		m_index = index;
+	}
+
 	void get(Model const& model) const noexcept override
 	{
-		std::cout << parseJSON( model.get(), 0 ).dump() << std::endl;
+		std::cout << parseJSON( model.get(), m_index ).dump() << std::endl;
 	}
+private:
+	std::size_t m_index = 0;
 };

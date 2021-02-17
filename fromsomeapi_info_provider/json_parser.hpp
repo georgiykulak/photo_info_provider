@@ -17,9 +17,9 @@ json parseJSON(json const& rawJSON, std::size_t index)
 
 	try
 	{
-		rawAsset = rawJSON[index];
+		rawAsset = rawJSON.at(index);
 	}
-	catch (std::out_of_range const&)
+	catch (json::out_of_range const&)
 	{
 		return json({ "error", "The index " + std::to_string(index) + " is out of range" });
 	}

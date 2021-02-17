@@ -14,6 +14,11 @@ public:
 		, m_view{ viewPtr }
 	{}
 
+	void setAssetNumber( std::size_t const index ) noexcept
+	{
+		m_view->setAssetNumber(index);
+	}
+
 	void getResult() const noexcept
 	{
 		m_view->get(m_model);

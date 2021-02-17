@@ -12,16 +12,30 @@ public:
 		set(str);
 	}
 
-	virtual void set(std::string const& str)
+	void set(std::string const& str)
 	{
-		m_data = str;
+		m_rawData = str;
+
+		reparse();
 	}
 
-	virtual std::string const& get() const noexcept
+	std::string const& getRaw() const noexcept
 	{
-		return m_data;
+		return m_rawData;
+	}
+
+	std::string const& get() const noexcept
+	{
+		return m_cleanData;
+	}
+
+	virtual void reparse()
+	{
+		// TODO: Reparse JSON
+		m_cleanData = m_rawData; // TODO: Remove it !!!
 	}
 
 private:
-	std::string m_data;
+	std::string m_rawData;
+	std::string m_cleanData;
 };

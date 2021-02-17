@@ -29,7 +29,7 @@ public:
 
 	void get(Model const& model) const noexcept override
 	{
-		 getOutputString() = model.get();
+		 getOutputString() = model.getRaw();
 	}
 };
 

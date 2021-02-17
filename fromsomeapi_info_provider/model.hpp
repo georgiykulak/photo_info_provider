@@ -1,6 +1,8 @@
 #pragma once
 
-#include "json_parser.hpp"
+#include "../json/single_include/nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 class Model
 {
@@ -14,27 +16,14 @@ public:
 
 	void set(std::string const& str)
 	{
-		m_rawData = str;
-
-		reparse();
+		m_rawJSON = json::parse(str);
 	}
 
-	std::string const& getRaw() const noexcept
+	json const& get() const noexcept
 	{
-		return m_rawData;
-	}
-
-	std::string const& get() const noexcept
-	{
-		return m_cleanData;
-	}
-
-	virtual void reparse()
-	{
-		m_cleanData = parseJSON( m_rawData, 0 );
+		return m_rawJSON;
 	}
 
 private:
-	std::string m_rawData;
-	std::string m_cleanData;
+	json m_rawJSON;
 };

@@ -7,17 +7,13 @@
 
 using json = nlohmann::json;
 
-auto parseJSON(std::string const& rawStr, std::size_t index)
+json parseJSON(json const& rawJSON, std::size_t index)
 {
-	auto rawJSON = json::parse(rawStr);
-	json cleanJSON;
 	json rawAsset;
+	json cleanJSON;
 
 	if (!rawJSON.is_array())
-	{
-		cleanJSON["error"] = "Got not an array of assets";
-		return cleanJSON.dump();
-	}
+		return json({ "error", "Got not an array of assets" });
 
 	try
 	{
@@ -25,8 +21,7 @@ auto parseJSON(std::string const& rawStr, std::size_t index)
 	}
 	catch (std::out_of_range const&)
 	{
-		cleanJSON["error"] = "The index " + std::to_string( index ) + " is out of range";
-		return cleanJSON.dump();
+		return json({ "error", "The index " + std::to_string(index) + " is out of range" });
 	}
 
 	if (rawAsset.contains("id"))
@@ -42,5 +37,5 @@ auto parseJSON(std::string const& rawStr, std::size_t index)
 	if (rawAsset.contains("updated_at"))
 		cleanJSON["modifiedTime"] = rawAsset["updated_at"];
 
-	return cleanJSON.dump();
+	return cleanJSON;
 }

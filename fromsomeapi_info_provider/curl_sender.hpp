@@ -50,20 +50,16 @@ void send(Model& model, std::string const& link, std::string const& auth)
 	model.set(response);
 }
 
-Model getModel(std::unique_ptr< IView > const& viewPtr, std::string const& apiLink)
+Model getModel(std::string user, std::string access_key, std::string const& apiLink)
 {
 	Model model;
-	std::string user;
-	std::string access_key;
-
-	viewPtr->set(user, access_key);
 
 	std::string const link = apiLink + "users/" + user + "/photos/";
 	std::string const auth = "Authorization: Client-ID " + access_key;
 	send(model, link, auth);
 
 	if (model.get().empty())
-		return Model("Error: Something wrong happened on curl_easy_init()");
+		return Model("{\"error\":\"Something wrong happened on curl_easy_init()\"}");
 
 	return model;
 }

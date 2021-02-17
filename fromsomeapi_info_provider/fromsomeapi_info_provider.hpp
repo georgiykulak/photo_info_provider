@@ -10,7 +10,15 @@ void defMain()
 
 	std::unique_ptr< IView > viewPtr(std::make_unique< CLIView >());
 
-	Model model = getModel(viewPtr, apiLink);
+	std::string username;
+	std::cout << "Enter username: ";
+	std::cin >> username;
+
+	std::string password;
+	std::cout << "Enter password: ";
+	std::cin >> password;
+
+	Model model = getModel(username, password, apiLink);
 
 	Controller controller(model, viewPtr);
 

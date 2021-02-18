@@ -11,11 +11,15 @@ public:
 
 	virtual void parse() = 0;
 
-	virtual std::string const& getFilename() noexcept = 0;
-	
-	virtual std::size_t getFilesize() noexcept = 0;
+	virtual unsigned getSuccessCode() const noexcept = 0;
 
-	virtual std::string const& getModifiedTime() noexcept = 0;
+	virtual std::pair<unsigned, std::string> const& getResponse() const noexcept = 0;
+
+	virtual std::string const& getFilename() const noexcept = 0;
 	
-	virtual std::string const& getUploadTime() noexcept = 0;
+	virtual std::size_t getFilesize() const noexcept = 0;
+
+	virtual std::string const& getModifiedTime() const noexcept = 0;
+	
+	virtual std::string const& getUploadTime() const noexcept = 0;
 };

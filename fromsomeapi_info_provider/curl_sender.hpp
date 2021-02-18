@@ -21,7 +21,7 @@ void send(std::unique_ptr< IModel >& modelPtr, std::string const& link, std::str
 
 	if (!curl)
 	{
-		modelPtr->set(R"({"error":"Something wrong happened on curl_easy_init"})");
+		modelPtr->set(R"("response":{"403":"User does not have permission to view asset"})");
 
 		return;
 	}
@@ -46,8 +46,8 @@ void send(std::unique_ptr< IModel >& modelPtr, std::string const& link, std::str
 
 void getModel(
 	std::unique_ptr< IModel > & modelPtr,
-	std::string user,
-	std::string access_key,
+	std::string const& user,
+	std::string const& access_key,
 	std::string const& apiLink
 )
 {

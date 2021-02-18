@@ -15,10 +15,16 @@ public:
 	{
 		json res;
 		
-		res["filename"] = modelPtr->getFilename();
-		res["filesize"] = modelPtr->getFilesize();
-		res["modifiedTime"] = modelPtr->getModifiedTime();
-		res["uploadTime"] = modelPtr->getUploadTime();
+		auto const & resPair = modelPtr->getResponse();
+		res["response"][std::to_string(resPair.first)] = resPair.second;
+
+		if (resPair.first == modelPtr->getSuccessCode())
+		{
+			res["filename"] = modelPtr->getFilename();
+			res["filesize"] = modelPtr->getFilesize();
+			res["modifiedTime"] = modelPtr->getModifiedTime();
+			res["uploadTime"] = modelPtr->getUploadTime();
+		}
 
 		std::cout << res.dump() << std::endl;
 	}

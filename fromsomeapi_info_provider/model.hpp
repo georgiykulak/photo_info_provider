@@ -25,19 +25,32 @@ public:
 	{
 		json assetJSON;
 
+		if (!m_rawJSON.is_array() && m_rawJSON.contains("errors"))
+		{
+			if (m_rawJSON["errors"].is_array())
+			{
+				std::string str = m_rawJSON["errors"].at(0).get<std::string>();
+				
+				if (str.rfind("OAuth error", 0) == 0)
+					m_response = { 401, "User is not authenticated" };
+				
+				return;
+			}
+		}
+
 		try
 		{
 			assetJSON = m_rawJSON.at(m_assetNumber);
 		}
 		catch (json::out_of_range const&)
 		{
-			m_rawJSON =
-				json({ "error",
-					"The index " + std::to_string(m_assetNumber) + " is out of range" });
+			m_response = { 404, "Asset does not exist" };
+			return;
 		}
 		catch (std::exception const&)
 		{
-			m_rawJSON = json({ "error", "Can't access array of assets by an index" });
+			m_response = { 404, "Asset does not exist" };
+			return;
 		}
 
 		if (assetJSON.contains("id"))
@@ -53,30 +66,43 @@ public:
 
 		if (assetJSON.contains("updated_at"))
 			m_modifiedTime = assetJSON["updated_at"];
+
+		m_response = { getSuccessCode(), "The operation was successful" };
 	}
 
-	virtual std::string const& getFilename() noexcept override
+	unsigned getSuccessCode() const noexcept override
+	{
+		return 200;
+	}
+
+	std::pair<unsigned, std::string> const& getResponse() const noexcept override
+	{
+		return m_response;
+	}
+
+	std::string const& getFilename() const noexcept override
 	{
 		return m_filename;
 	}
 
-	virtual std::size_t getFilesize() noexcept override
+	std::size_t getFilesize() const noexcept override
 	{
 		return m_filesize;
 	}
 
-	virtual std::string const& getModifiedTime() noexcept override
+	std::string const& getModifiedTime() const noexcept override
 	{
 		return m_modifiedTime;
 	}
 
-	virtual std::string const& getUploadTime() noexcept override
+	std::string const& getUploadTime() const noexcept override
 	{
 		return m_uploadTime;
 	}
 
 private:
 	json m_rawJSON = json::array();
+	std::pair<unsigned, std::string> m_response;
 	std::string m_filename;
 	std::string m_modifiedTime;
 	std::string m_uploadTime;

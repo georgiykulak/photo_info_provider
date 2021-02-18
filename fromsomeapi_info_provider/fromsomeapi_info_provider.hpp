@@ -27,7 +27,7 @@ void defMain()
 
 	std::unique_ptr< IView > viewPtr(std::make_unique< CLIView >());
 	
-	Controller controller(modelPtr, viewPtr);
+	Controller controller(std::move(modelPtr), std::move(viewPtr));
 
 	controller.chooseAsset( index );
 

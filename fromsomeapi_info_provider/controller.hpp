@@ -10,9 +10,9 @@ class Controller
 public:
 	Controller() = delete;
 
-	Controller(std::unique_ptr< IModel > & modelPtr, std::unique_ptr< IView > const& viewPtr)
-		: m_modelPtr{ modelPtr }
-		, m_viewPtr{ viewPtr }
+	Controller(std::unique_ptr< IModel >&& modelPtr, std::unique_ptr< IView >&& viewPtr)
+		: m_modelPtr{ std::move( modelPtr ) }
+		, m_viewPtr{ std::move( viewPtr ) }
 	{}
 
 	void chooseAsset( std::size_t const index )
@@ -28,6 +28,6 @@ public:
 	}
 
 private:
-	std::unique_ptr< IModel > & m_modelPtr;
-	std::unique_ptr< IView > const& m_viewPtr;
+	std::unique_ptr< IModel > m_modelPtr;
+	std::unique_ptr< IView > m_viewPtr;
 };

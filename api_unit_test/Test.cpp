@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(MVCTest)
 
 	modelPtr->set(R"([{"id":"some_id2"}])");
 
-	Controller controller(modelPtr, viewPtr);
+	Controller controller(std::move( modelPtr ), std::move( viewPtr ));
 
 	controller.chooseAsset(0);
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(MainTest)
 
 	getModel(modelPtr, testUsername, testPassword, apiLink);
 
-	Controller controller(modelPtr, viewPtr);
+	Controller controller(std::move( modelPtr ), std::move( viewPtr ));
 
 	controller.chooseAsset(index);
 

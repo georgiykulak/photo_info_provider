@@ -38,7 +38,7 @@
     <ClInclude Include="model.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="json_parser.hpp">
+    <ClInclude Include="imodel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

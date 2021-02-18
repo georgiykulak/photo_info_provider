@@ -1,14 +1,13 @@
 #pragma once
 
 #include "controller.hpp"
+#include "model.hpp"
 #include "cli_view.hpp"
 #include "curl_sender.hpp"
 
 void defMain()
 {
 	std::string const apiLink = "https://api.unsplash.com/";
-
-	std::unique_ptr< IView > viewPtr(std::make_unique< CLIView >());
 
 	std::string username;
 	std::cout << "Enter username: ";
@@ -22,11 +21,15 @@ void defMain()
 	std::cout << "Enter the number of the asset to get info from: ";
 	std::cin >> index;
 
-	Model model = getModel(username, password, apiLink);
+	std::unique_ptr< IModel > modelPtr(std::make_unique< Model >());
+	
+	getModel(modelPtr, username, password, apiLink);
 
-	Controller controller(model, viewPtr);
+	std::unique_ptr< IView > viewPtr(std::make_unique< CLIView >());
+	
+	Controller controller(modelPtr, viewPtr);
 
-	controller.setAssetNumber( index );
+	controller.chooseAsset( index );
 
 	controller.getResult();
 }

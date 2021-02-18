@@ -1,13 +1,11 @@
 #pragma once
 
-#include "model.hpp"
+#include "imodel.h"
 
-#include <string>
+#include <memory>
 
 class IView
 {
 public:
-	virtual void setAssetNumber(std::size_t const) noexcept = 0;
-
-	virtual void get(Model const&) const noexcept = 0;
+	virtual void get(std::unique_ptr< IModel > const&) const = 0;
 };

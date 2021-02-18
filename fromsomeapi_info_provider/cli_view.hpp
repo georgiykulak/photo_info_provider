@@ -4,20 +4,22 @@
 
 #include <iostream>
 
-#include "json_parser.hpp"
+#include "../json/single_include/nlohmann/json.hpp"
+
+using json = nlohmann::json;
 
 class CLIView final : public IView
 {
 public:
-	void setAssetNumber(std::size_t const index) noexcept override
+	void get(std::unique_ptr< IModel > const& modelPtr) const override
 	{
-		m_index = index;
-	}
+		json res;
+		
+		res["filename"] = modelPtr->getFilename();
+		res["filesize"] = modelPtr->getFilesize();
+		res["modifiedTime"] = modelPtr->getModifiedTime();
+		res["uploadTime"] = modelPtr->getUploadTime();
 
-	void get(Model const& model) const noexcept override
-	{
-		std::cout << parseJSON( model.get(), m_index ).dump() << std::endl;
+		std::cout << res.dump() << std::endl;
 	}
-private:
-	std::size_t m_index = 0;
 };

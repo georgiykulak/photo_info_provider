@@ -17,10 +17,16 @@ class TestView final : public IView
 public:
 	void get(std::unique_ptr< IModel > const& modelPtr) const override
 	{
-		outputJSON["filename"] = modelPtr->getFilename();
-		outputJSON["filesize"] = modelPtr->getFilesize();
-		outputJSON["modifiedTime"] = modelPtr->getModifiedTime();
-		outputJSON["uploadTime"] = modelPtr->getUploadTime();
+		auto const& resPair = modelPtr->getResponse();
+		outputJSON["response"][std::to_string(resPair.first)] = resPair.second;
+
+		if (resPair.first == modelPtr->getSuccessCode())
+		{
+			outputJSON["filename"] = modelPtr->getFilename();
+			outputJSON["filesize"] = modelPtr->getFilesize();
+			outputJSON["modifiedTime"] = modelPtr->getModifiedTime();
+			outputJSON["uploadTime"] = modelPtr->getUploadTime();
+		}
 	}
 };
 
@@ -84,6 +90,9 @@ BOOST_AUTO_TEST_CASE(MainTest)
 
 	controller.getResult();
 
+	BOOST_REQUIRE(outputJSON.contains("response"));
+	BOOST_REQUIRE(outputJSON["response"].contains("200"));
+	BOOST_REQUIRE_EQUAL(outputJSON["response"]["200"], "The operation was successful");
 	BOOST_CHECK_EQUAL(outputJSON["filename"], "EwgqRnJT9gE");
 	BOOST_CHECK_EQUAL(outputJSON["filesize"], 11376774);
 	BOOST_CHECK_EQUAL(outputJSON["modifiedTime"], "2021-02-17T16:26:40-05:00");

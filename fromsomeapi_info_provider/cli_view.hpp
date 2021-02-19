@@ -24,6 +24,8 @@ public:
 			res["filesize"] = modelPtr->getFilesize();
 			res["modifiedTime"] = modelPtr->getModifiedTime();
 			res["uploadTime"] = modelPtr->getUploadTime();
+			res["description"] = modelPtr->getDescription();
+			res["linkToPhoto"] = modelPtr->getLinkToPhoto();
 		}
 
 		std::cout << res.dump() << std::endl;

@@ -22,4 +22,8 @@ public:
 	virtual std::string const& getModifiedTime() const noexcept = 0;
 	
 	virtual std::string const& getUploadTime() const noexcept = 0;
+
+	virtual std::string const& getDescription() const noexcept = 0;
+	
+	virtual std::string const& getLinkToPhoto() const noexcept = 0;
 };

@@ -67,6 +67,12 @@ public:
 		if (assetJSON.contains("updated_at"))
 			m_modifiedTime = assetJSON["updated_at"];
 
+		if (assetJSON.contains("description"))
+			m_description = assetJSON["description"];
+
+		if (assetJSON.contains("urls") && assetJSON["urls"].contains("raw"))
+			m_linkToPhoto = assetJSON["urls"]["raw"];
+
 		m_response = { getSuccessCode(), "The operation was successful" };
 	}
 
@@ -100,12 +106,24 @@ public:
 		return m_uploadTime;
 	}
 
+	std::string const& getDescription() const noexcept override
+	{
+		return m_description;
+	}
+
+	std::string const& getLinkToPhoto() const noexcept override
+	{
+		return m_linkToPhoto;
+	}
+
 private:
 	json m_rawJSON = json::array();
 	std::pair<unsigned, std::string> m_response;
 	std::string m_filename;
 	std::string m_modifiedTime;
 	std::string m_uploadTime;
+	std::string m_description;
+	std::string m_linkToPhoto;
 	std::size_t m_assetNumber = 0;
 	std::size_t m_filesize = 0;
 };

@@ -44,6 +44,9 @@ BOOST_AUTO_TEST_CASE(ModelViewTest)
 
 	viewPtr->get(modelPtr);
 
+	BOOST_REQUIRE(outputJSON.contains("response"));
+	BOOST_REQUIRE(outputJSON["response"].contains("200"));
+	BOOST_REQUIRE_EQUAL(outputJSON["response"]["200"], "The operation was successful");
 	BOOST_CHECK_EQUAL(outputJSON["filename"], "some_id1");
 }
 
@@ -63,6 +66,9 @@ BOOST_AUTO_TEST_CASE(MVCTest)
 
 	controller.getResult();
 
+	BOOST_REQUIRE(outputJSON.contains("response"));
+	BOOST_REQUIRE(outputJSON["response"].contains("200"));
+	BOOST_REQUIRE_EQUAL(outputJSON["response"]["200"], "The operation was successful");
 	BOOST_CHECK_EQUAL(outputJSON["filename"], "some_id2");
 }
 

@@ -10,7 +10,7 @@ class Controller
 public:
 	Controller() = delete;
 
-	Controller(std::unique_ptr< IModel >&& modelPtr, std::unique_ptr< IView >&& viewPtr)
+	Controller(std::unique_ptr< IModel > modelPtr, std::unique_ptr< IView > viewPtr)
 		: m_modelPtr{ std::move( modelPtr ) }
 		, m_viewPtr{ std::move( viewPtr ) }
 	{}

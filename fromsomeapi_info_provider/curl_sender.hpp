@@ -21,7 +21,7 @@ void send(std::unique_ptr< IModel >& modelPtr, std::string const& link, std::str
 
 	if (!curl)
 	{
-		modelPtr->set(R"("response":{"403":"User does not have permission to view asset"})");
+		modelPtr->set(R"("response":{"500":"Internal Server Error"})");
 
 		return;
 	}

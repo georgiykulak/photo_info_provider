@@ -26,6 +26,8 @@ public:
 			outputJSON["filesize"] = modelPtr->getFilesize();
 			outputJSON["modifiedTime"] = modelPtr->getModifiedTime();
 			outputJSON["uploadTime"] = modelPtr->getUploadTime();
+			outputJSON["description"] = modelPtr->getDescription();
+			outputJSON["linkToPhoto"] = modelPtr->getLinkToPhoto();
 		}
 	}
 };
@@ -101,8 +103,13 @@ BOOST_AUTO_TEST_CASE(MainTest)
 	BOOST_REQUIRE_EQUAL(outputJSON["response"]["200"], "The operation was successful");
 	BOOST_CHECK_EQUAL(outputJSON["filename"], "EwgqRnJT9gE");
 	BOOST_CHECK_EQUAL(outputJSON["filesize"], 11376774);
-	BOOST_CHECK_EQUAL(outputJSON["modifiedTime"], "2021-02-17T16:26:40-05:00");
+	BOOST_CHECK_EQUAL(outputJSON["modifiedTime"], "2021-02-18T15:49:57-05:00");
 	BOOST_CHECK_EQUAL(outputJSON["uploadTime"], "2021-02-17T16:11:18-05:00");
+	BOOST_CHECK_EQUAL(outputJSON["description"], "Just a beautiful woman");
+	BOOST_CHECK_EQUAL(
+		outputJSON["linkToPhoto"],
+		"https://images.unsplash.com/photo-1613596218517-f3ec8bf1e1ba?ixid=MXwyMDczNzZ8MHwxfGFsbHwxfHx8fHx8Mnw&ixlib=rb-1.2.1"
+	);
 #else
 	std::cout <<
 		"The test \"MainTest\" requires user input. If you able to enter from keyboard - define _TINPUT"

@@ -78,6 +78,8 @@ BOOST_AUTO_TEST_CASE(MainTest)
 {
 #ifdef _TINPUT
 	// Almost defMain();
+	outputJSON = json{};
+
 	std::string testUsername;
 	std::cout << "Test: Enter username: ";
 	std::cin >> testUsername;
@@ -101,14 +103,14 @@ BOOST_AUTO_TEST_CASE(MainTest)
 	BOOST_REQUIRE(outputJSON.contains("response"));
 	BOOST_REQUIRE(outputJSON["response"].contains("200"));
 	BOOST_REQUIRE_EQUAL(outputJSON["response"]["200"], "The operation was successful");
-	BOOST_CHECK_EQUAL(outputJSON["filename"], "EwgqRnJT9gE");
+	BOOST_CHECK_EQUAL(outputJSON["filename"], "MpbRU6LY31k");
 	BOOST_CHECK_EQUAL(outputJSON["filesize"], 11376774);
-	BOOST_CHECK_EQUAL(outputJSON["modifiedTime"], "2021-02-18T15:49:57-05:00");
-	BOOST_CHECK_EQUAL(outputJSON["uploadTime"], "2021-02-17T16:11:18-05:00");
+	BOOST_CHECK(!outputJSON["modifiedTime"].empty());
+	BOOST_CHECK(!outputJSON["uploadTime"].empty());
 	BOOST_CHECK_EQUAL(outputJSON["description"], "Just a beautiful woman");
 	BOOST_CHECK_EQUAL(
 		outputJSON["linkToPhoto"],
-		"https://images.unsplash.com/photo-1613596218517-f3ec8bf1e1ba?ixid=MXwyMDczNzZ8MHwxfGFsbHwxfHx8fHx8Mnw&ixlib=rb-1.2.1"
+		"https://images.unsplash.com/photo-1613976368854-0e51cb8353cf?ixid=MXwyMDczMDh8MHwxfGFsbHwxfHx8fHx8Mnw&ixlib=rb-1.2.1"
 	);
 #else
 	std::cout <<

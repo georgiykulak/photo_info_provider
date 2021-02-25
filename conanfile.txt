@@ -1,5 +1,6 @@
 [requires]
-libcurl/7.52.1@bincrafters/stable
+libcurl/7.75.0
+boost/1.75.0
 
 [generators]
 cmake

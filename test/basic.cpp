@@ -1,9 +1,9 @@
 #define BOOST_TEST_MODULE mytests
 
-#include "../src/controller.hpp"
-#include "../src/model.hpp"
-#include "../src/iview.h"
-#include "../src/curl_sender.hpp"
+#include <controller.hpp>
+#include <model_unsplash.hpp>
+#include <iview.hpp>
+#include <curl_sender.hpp>
 
 #include <boost/test/included/unit_test.hpp>
 
@@ -15,6 +15,23 @@ json outputJSON;
 class TestView final : public IView
 {
 public:
+	void readUsername ( std::string & testUsername ) const override
+	{
+		std::cout << "Test: Enter username: ";
+		std::cin >> testUsername;
+	}
+
+	void readPassword ( std::string & testPassword ) const override
+	{
+		std::cout << "Test: Enter password: ";
+		std::cin >> testPassword;
+	}
+	
+	void readAssetNumber ( std::size_t & index ) const override
+	{
+		index = 0;
+	}
+
 	void get(std::unique_ptr< IModel > const& modelPtr) const override
 	{
 		auto const& resPair = modelPtr->getResponse();
@@ -36,7 +53,7 @@ BOOST_AUTO_TEST_CASE(ModelViewTest)
 {
 	outputJSON = json{};
 
-	std::unique_ptr< IModel > modelPtr(std::make_unique< Model >());
+	std::unique_ptr< IModel > modelPtr(std::make_unique< ModelUnsplash >());
 
 	modelPtr->set(R"([{"id":"some_id1"}])");
 
@@ -58,13 +75,11 @@ BOOST_AUTO_TEST_CASE(MVCTest)
 
 	std::unique_ptr< IView > viewPtr(std::make_unique< TestView >());
 
-	std::unique_ptr< IModel > modelPtr(std::make_unique< Model >());
+	std::unique_ptr< IModel > modelPtr(std::make_unique< ModelUnsplash >());
 
 	modelPtr->set(R"([{"id":"some_id2"}])");
 
 	Controller controller(std::move( modelPtr ), std::move( viewPtr ));
-
-	controller.chooseAsset(0);
 
 	controller.getResult();
 
@@ -80,23 +95,13 @@ BOOST_AUTO_TEST_CASE(MainTest)
 	// Almost defMain();
 	outputJSON = json{};
 
-	std::string testUsername;
-	std::cout << "Test: Enter username: ";
-	std::cin >> testUsername;
-	std::string testPassword;
-	std::cout << "Test: Enter password: ";
-	std::cin >> testPassword;
-	std::size_t const index = 0;
-
 	std::unique_ptr< IView > viewPtr(std::make_unique< TestView >());
 
-	std::unique_ptr< IModel > modelPtr(std::make_unique< Model >());
-
-	getModel(modelPtr, testUsername, testPassword, apiLink);
+	std::unique_ptr< IModel > modelPtr(std::make_unique< ModelUnsplash >());
 
 	Controller controller(std::move( modelPtr ), std::move( viewPtr ));
 
-	controller.chooseAsset(index);
+	controller.fetchContent();
 
 	controller.getResult();
 

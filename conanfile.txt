@@ -1,9 +1,5 @@
 [requires]
-libcurl/7.75.0
 boost/1.75.0
 
 [generators]
 cmake
-
-[options]
-libcurl:with_openssl=True

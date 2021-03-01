@@ -6,7 +6,8 @@
 
 #include <curl\curl.h>
 
-std::string sendAndGet (
+void sendGetRequest (
+	std::string &,
 	std::string const & link,
 	std::string const & auth
 );

@@ -15,7 +15,24 @@ add_library( curl_sender
     src/curl_sender.cpp include/curl_sender.hpp include/imodel.hpp
 )
 
-target_link_libraries( curl_sender CONAN_PKG::libcurl )
+######   Fix this  ######
+# target_link_libraries( curl_sender CONAN_PKG::libcurl )
+###### Remove this ######
+if ( NOT XARCH_WINDOWS )
+    set( XARCH_WINDOWS "x64-windows" )
+endif()
+if ( NOT PATH_TO_VCPKG )
+    set( PATH_TO_VCPKG C:/vcpkg/installed/${XARCH_WINDOWS} )
+endif()
+set( VCPKG_TARGET_TRIPLET ${XARCH_WINDOWS} )
+set( CURL_DIR ${PATH_TO_VCPKG}/share/curl/ )
+set( ZLIB_ROOT ${PATH_TO_VCPKG} )
+set( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${PATH_TO_VCPKG}/share/curl/ )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PATH_TO_VCPKG}/share/curl/ )
+include( CURLConfig )
+find_package( CURL CONFIG REQUIRED )
+target_link_libraries( curl_sender PRIVATE CURL::libcurl )
+###### ~~~~~~~~~~~ ######
 
 add_library( model_unsplash
     src/model_unsplash.cpp include/model_unsplash.hpp include/imodel.hpp

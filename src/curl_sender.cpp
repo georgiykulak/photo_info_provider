@@ -16,7 +16,8 @@ static std::size_t WriteDataCallback (
 	return writeSize;
 }
 
-std::string sendAndGet (
+void sendGetRequest (
+	std::string & response,
 	std::string const & link,
 	std::string const & auth
 )
@@ -24,22 +25,22 @@ std::string sendAndGet (
 	CURL* curl = curl_easy_init();
 
 	if ( !curl )
-		return R"("response":{"500":"Internal Server Error"})";
+	{
+		response = R"("response":{"503":"Service Unavailable"})";
+		return;
+	}
 
-	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
-	curl_easy_setopt(curl, CURLOPT_URL, link.data());
+	curl_easy_setopt( curl, CURLOPT_CUSTOMREQUEST, "GET" );
+	curl_easy_setopt( curl, CURLOPT_URL, link.c_str() );
 
 	struct curl_slist* headers = nullptr;
 
-	headers = curl_slist_append(headers, auth.data());
-	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteDataCallback);
+	headers = curl_slist_append( headers, auth.c_str() );
+	curl_easy_setopt( curl, CURLOPT_HTTPHEADER, headers );
+	curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, WriteDataCallback );
 
-	std::string response;
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+	curl_easy_setopt( curl, CURLOPT_WRITEDATA, &response );
 
-	curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
-
-	return response;
+	curl_easy_perform( curl );
+	curl_easy_cleanup( curl );
 }

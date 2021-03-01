@@ -5,8 +5,6 @@
 class IModel
 {
 public:
-	virtual std::string getApiLink () const = 0;
-
 	virtual void fetch (
 		std::string const & user,
 		std::string const & access_key

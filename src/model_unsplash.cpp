@@ -1,23 +1,25 @@
 #include <model_unsplash.hpp>
 
-std::string ModelUnsplash::getApiLink () const
-{
-    return "https://api.unsplash.com/";
-}
+#include <iostream>
 
 void ModelUnsplash::fetch (
     std::string const & user,
     std::string const & access_key
 )
 {
-    std::string const link = getApiLink() + "users/" + user + "/photos/";
-	std::string const auth = "Authorization: Client-ID " + access_key;
-	set( sendAndGet( link, auth ) );
+    std::string const endPoint =
+        s_apiLink.data() + ( "users/" + user + "/photos/" );
+	std::string const authHeader = "Authorization: Client-ID " + access_key;
+    
+    std::string responce;
+    sendGetRequest( responce, endPoint, authHeader );
+	set( responce );
 }
 
 void ModelUnsplash::set ( std::string const & str )
 {
-    m_rawJSON = json::parse( str );
+    if ( !str.empty() )
+        m_rawJSON = json::parse( str );
 }
 
 void ModelUnsplash::setAssetNumber ( std::size_t const index ) noexcept
@@ -26,16 +28,27 @@ void ModelUnsplash::setAssetNumber ( std::size_t const index ) noexcept
 }
 
 void ModelUnsplash::parse ()
+try
 {
     json assetJSON;
 
-    if (!m_rawJSON.is_array())
+    if ( m_rawJSON.empty() )
     {
-        if (m_rawJSON.contains("errors") && m_rawJSON["errors"].is_array())
+        m_response = { 501, "Not Implemented" };
+        return;
+    }
+
+    if ( !m_rawJSON.is_array() )
+    {
+        if ( m_rawJSON.contains( "errors" ) &&
+            m_rawJSON[ "errors" ].is_array() &&
+            !m_rawJSON[ "errors" ].empty()
+        )
         {
-            std::string str = m_rawJSON["errors"].at(0).get<std::string>();
+            std::string str =
+                m_rawJSON[ "errors" ].at( 0 ).get< std::string >();
             
-            if (str.rfind("OAuth error", 0) == 0)
+            if ( str.rfind( "OAuth error", 0 ) == 0 )
                 m_response = { 401, "User is not authenticated" };
         }
         else
@@ -46,48 +59,50 @@ void ModelUnsplash::parse ()
         return;
     }
 
-    try
-    {
-        assetJSON = m_rawJSON.at(m_assetNumber);
-    }
-    catch (json::out_of_range const&)
-    {
-        m_response = { 404, "Asset does not exist" };
-        return;
-    }
-    catch (std::exception const&)
+    if ( m_rawJSON.size() <= m_assetNumber )
     {
         m_response = { 404, "Asset does not exist" };
         return;
     }
     
-    // Can NOT be null
-    if (assetJSON.contains("id"))
-        m_filename = assetJSON["id"].get< std::string >();
+    assetJSON = m_rawJSON.at( m_assetNumber );
+    
+    if ( assetJSON.contains( "id" ) && !assetJSON[ "id" ].is_null() )
+        m_filename = assetJSON[ "id" ].get< std::string >();
 
-    // Can NOT be null
-    if (assetJSON.contains("width") && assetJSON.contains("height"))
+    if ( assetJSON.contains( "width" ) && assetJSON.contains( "height" ) &&
+        !assetJSON[ "width" ].is_null() && !assetJSON[ "height" ].is_null()
+    )
         m_filesize =
-            assetJSON["width"].get< std::size_t >() *
-            assetJSON["height"].get< std::size_t >();
+            assetJSON[ "width" ].get< std::size_t >() *
+            assetJSON[ "height" ].get< std::size_t >();
 
-    // Can NOT be null
-    if (assetJSON.contains("created_at"))
-        m_uploadTime = assetJSON["created_at"].get< std::string >();
+    if ( assetJSON.contains( "created_at" ) &&
+        !assetJSON[ "created_at" ].is_null()
+    )
+        m_uploadTime = assetJSON[ "created_at" ].get< std::string >();
 
-    // Can NOT be null
-    if (assetJSON.contains("updated_at"))
-        m_modifiedTime = assetJSON["updated_at"].get< std::string >();
+    if ( assetJSON.contains( "updated_at" ) &&
+        !assetJSON[ "updated_at" ].is_null()
+    )
+        m_modifiedTime = assetJSON[ "updated_at" ].get< std::string >();
 
-    // Can be null
-    if (assetJSON.contains("description") && !assetJSON["description"].is_null())
-        m_description = assetJSON["description"].get< std::string >();
+    if ( assetJSON.contains( "description" ) &&
+        !assetJSON[ "description" ].is_null()
+    )
+        m_description = assetJSON[ "description" ].get< std::string >();
 
-    // Can NOT be null
-    if (assetJSON.contains("urls") && assetJSON["urls"].contains("raw"))
-        m_linkToPhoto = assetJSON["urls"]["raw"].get< std::string >();
+    if ( assetJSON.contains( "urls" ) && !assetJSON[ "urls" ].is_null() &&
+        assetJSON["urls"].contains("raw") &&
+        !assetJSON[ "urls" ][ "raw" ].is_null()
+    )
+        m_linkToPhoto = assetJSON[ "urls" ][ "raw" ].get< std::string >();
 
     m_response = { getSuccessCode(), "The operation was successful" };
+}
+catch ( std::exception const & ex )
+{
+    m_response = { 500, "Internal Server Error" };
 }
 
 unsigned ModelUnsplash::getSuccessCode () const noexcept

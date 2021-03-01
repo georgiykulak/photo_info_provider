@@ -11,8 +11,6 @@ class ModelUnsplash final : public IModel
 public:
 	ModelUnsplash () = default;
 
-	std::string getApiLink () const override;
-
 	void fetch (
 		std::string const & user,
 		std::string const & access_key
@@ -41,6 +39,9 @@ public:
 	std::string const & getLinkToPhoto () const noexcept override;
 
 private:
+	inline static std::string_view constexpr s_apiLink =
+													"https://api.unsplash.com/";
+
 	json m_rawJSON = json::array();
 	std::pair< unsigned, std::string > m_response;
 	std::string m_filename;

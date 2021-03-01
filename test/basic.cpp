@@ -81,6 +81,9 @@ BOOST_AUTO_TEST_CASE(MVCTest)
 
 	Controller controller(std::move( modelPtr ), std::move( viewPtr ));
 
+	controller.setDetails();
+	controller.prepareResult();
+
 	controller.getResult();
 
 	BOOST_REQUIRE(outputJSON.contains("response"));

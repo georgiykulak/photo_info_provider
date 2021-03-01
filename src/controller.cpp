@@ -8,22 +8,30 @@ Controller::Controller (
     , m_viewPtr{ std::move( viewPtr ) }
 {}
 
-void Controller::fetchContent ()
+void Controller::setDetails ()
 {
-    std::string username;
-    m_viewPtr->readUsername( username );
+    m_viewPtr->readUsername( m_username );
+    m_viewPtr->readPassword( m_password );
+    m_viewPtr->readAssetNumber( m_index );
+}
 
-	std::string password;
-    m_viewPtr->readPassword( password );
+void Controller::fetch ()
+{
+    m_modelPtr->fetch( m_username, m_password );
+}
 
-	std::size_t index;
-    m_viewPtr->readAssetNumber( index );
-
-    m_modelPtr->fetch( username, password );
-
-    m_modelPtr->setAssetNumber( index );
+void Controller::prepareResult ()
+{
+    m_modelPtr->setAssetNumber( m_index );
 
     m_modelPtr->parse();
+}
+
+void Controller::fetchContent ()
+{
+    setDetails();
+    fetch();
+    prepareResult();
 }
 
 void Controller::getResult () const noexcept

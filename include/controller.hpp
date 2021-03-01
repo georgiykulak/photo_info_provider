@@ -14,6 +14,12 @@ public:
 		std::unique_ptr< IView > viewPtr
 	);
 
+	void setDetails ();
+
+	void fetch ();
+
+	void prepareResult ();
+
 	void fetchContent ();
 
 	void getResult () const noexcept;
@@ -21,4 +27,7 @@ public:
 private:
 	std::unique_ptr< IModel > m_modelPtr;
 	std::unique_ptr< IView > m_viewPtr;
+	std::string m_username;
+	std::string m_password;
+	std::size_t m_index;
 };

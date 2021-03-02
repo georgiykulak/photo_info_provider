@@ -1,10 +1,11 @@
-#pragma once
+#ifndef PHOTO_INFO_PROVIDER_VIEW_CLI_HPP
+#define PHOTO_INFO_PROVIDER_VIEW_CLI_HPP
 
 #include <iview.hpp>
 
 #include <iostream>
 
-#include "../json/single_include/nlohmann/json.hpp"
+#include <single_include/nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
@@ -19,3 +20,5 @@ public:
 	
 	void get ( std::unique_ptr< IModel > const & ) const override;
 };
+
+#endif // PHOTO_INFO_PROVIDER_VIEW_CLI_HPP //

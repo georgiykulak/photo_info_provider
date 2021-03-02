@@ -8,12 +8,15 @@ include( ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake )
 conan_basic_setup( TARGETS )
 
 include_directories( ${CMAKE_SOURCE_DIR}/include )
+include_directories( ${CMAKE_SOURCE_DIR}/json )
 
 # Project
 
 add_library( curl_sender
     src/curl_sender.cpp include/curl_sender.hpp include/imodel.hpp
 )
+
+# One of the best ways is to use submodule for curl and leave conan for boost
 
 ######   Fix this  ######
 # target_link_libraries( curl_sender CONAN_PKG::libcurl )

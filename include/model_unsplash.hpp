@@ -2,7 +2,7 @@
 
 #include <curl_sender.hpp>
 
-#include "../json/single_include/nlohmann/json.hpp"
+#include <single_include/nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
@@ -24,7 +24,8 @@ public:
 
 	unsigned getSuccessCode () const noexcept override;
 
-	std::pair< unsigned, std::string > const & getResponse () const noexcept override;
+	std::pair< unsigned, std::string > const & getResponse ()
+	const noexcept override;
 
 	std::string const & getFilename () const noexcept override;
 

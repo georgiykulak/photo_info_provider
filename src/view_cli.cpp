@@ -23,17 +23,17 @@ void ViewCLI::get ( std::unique_ptr< IModel > const & modelPtr ) const
     json res;
     
     auto const & resPair = modelPtr->getResponse();
-    res["response"][std::to_string(resPair.first)] = resPair.second;
+    res[ "response" ][ std::to_string( resPair.first ) ] = resPair.second;
 
-    if (resPair.first == modelPtr->getSuccessCode())
+    if ( resPair.first == modelPtr->getSuccessCode() )
     {
-        res["filename"] = modelPtr->getFilename();
-        res["filesize"] = modelPtr->getFilesize();
-        res["modifiedTime"] = modelPtr->getModifiedTime();
-        res["uploadTime"] = modelPtr->getUploadTime();
-        if (!modelPtr->getDescription().empty())
-            res["description"] = modelPtr->getDescription();
-        res["linkToPhoto"] = modelPtr->getLinkToPhoto();
+        res[ "filename" ] = modelPtr->getFilename();
+        res[ "filesize" ] = modelPtr->getFilesize();
+        res[ "modifiedTime" ] = modelPtr->getModifiedTime();
+        res[ "uploadTime" ] = modelPtr->getUploadTime();
+        if ( !modelPtr->getDescription().empty() )
+            res[ "description" ] = modelPtr->getDescription();
+        res[ "linkToPhoto" ] = modelPtr->getLinkToPhoto();
     }
 
     std::cout << res.dump() << std::endl;

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PHOTO_INFO_PROVIDER_IMODEL_HPP
+#define PHOTO_INFO_PROVIDER_IMODEL_HPP
 
 #include <string>
 
@@ -33,3 +34,5 @@ public:
 	
 	virtual std::string const & getLinkToPhoto () const noexcept = 0;
 };
+
+#endif // PHOTO_INFO_PROVIDER_IMODEL_HPP //

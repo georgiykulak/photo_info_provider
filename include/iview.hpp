@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PHOTO_INFO_PROVIDER_IVIEW_HPP
+#define PHOTO_INFO_PROVIDER_IVIEW_HPP
 
 #include <imodel.hpp>
 
@@ -15,3 +16,5 @@ public:
 	
 	virtual void get ( std::unique_ptr< IModel > const & ) const = 0;
 };
+
+#endif // PHOTO_INFO_PROVIDER_IVIEW_HPP //

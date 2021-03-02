@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PHOTO_INFO_PROVIDER_MODEL_UNSPLASH_HPP
+#define PHOTO_INFO_PROVIDER_MODEL_UNSPLASH_HPP
 
 #include <curl_sender.hpp>
 
@@ -53,3 +54,5 @@ private:
 	std::size_t m_assetNumber = 0;
 	std::size_t m_filesize = 0;
 };
+
+#endif // PHOTO_INFO_PROVIDER_MODEL_UNSPLASH_HPP //

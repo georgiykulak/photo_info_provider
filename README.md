@@ -16,7 +16,7 @@ Than do this command:
 ```./vcpkg.exe install curl:x64-windows```
 
 4. Go to path/to/this/cloned/repo/
-5. Prepare build direcory:
+5. Prepare build directory:
 
 ```mkdir build ; cd build ; conan install .. ; cd ..```
 

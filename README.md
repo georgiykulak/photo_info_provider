@@ -22,7 +22,11 @@ Than do this command:
 
 6. Generate build with cmake:
 
-```cmake -S . -B build```
+```cmake -S . -B build -DXARCH_WINDOWS="${XARCH_WINDOWS}" -DPATH_TO_VCPKG='PATH_TO_VCPKG'```
+
+Example:
+
+```cmake -S . -B build -DXARCH_WINDOWS="x64-windows" -DPATH_TO_VCPKG='C:\Program Files\vcpkg'```
 
 7. Build sources:
 

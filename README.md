@@ -22,7 +22,7 @@ Than do this command:
 
 6. Generate build with cmake:
 
-```cmake -S . -B build -DXARCH_WINDOWS="${XARCH_WINDOWS}" -DPATH_TO_VCPKG="${PATH_TO_VCPKG}"```
+```cmake -S . -B build -DXARCH_WINDOWS="${XARCH_WINDOWS}" -DPATH_TO_VCPKG="${directory_for_vcpkg}"```
 
 Example:
 
